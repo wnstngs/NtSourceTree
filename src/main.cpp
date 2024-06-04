@@ -17,6 +17,7 @@
 #include <iostream>
 
 #include "pdbdump.h"
+#include "srctree.h"
 
 static const std::string DefaultSymbolsLocation = R"(C:\Symbols\ntkrnlmp.pdb\)";
 static const std::string UsageString {
@@ -35,7 +36,8 @@ wmain(
     try {
         std::wstring filePath = L"C:\\Symbols\\ntkrnlmp.pdb\\B6CDAA3A3EF13C3B2799115B0470342B1\\ntkrnlmp.pdb";
 
-        /*if (argc == 2) {
+        /*
+        if (argc == 2) {
             filePath = argv[1];
         } else {
             //
@@ -44,13 +46,29 @@ wmain(
             std::cout << UsageString;
             std::cin.get();
             return 1;
-        }*/
+        }
+        */
 
+        //
+        // Create a PDB dump from the .pdb file path.
+        //
         const PDB_DUMP dump(filePath);
         for (const auto sourceFiles = dump.GetFiles(); 
              const auto &i : sourceFiles) {
             std::cout << i << '\n';
         }
+
+        //
+        // Create a source tree for the PDB.
+        //
+        SOURCE_TREE sourceTree(dump);
+
+        //
+        // Get JSON view and print it.
+        //
+        const nlohmann::json &jsonView = sourceTree.JsonView();
+        std::cout << "\n\n\t\tJSON View:\n\n\n";
+        std::cout << jsonView.dump(2) << '\n';
 
         CoUninitialize();
 

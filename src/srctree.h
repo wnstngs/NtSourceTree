@@ -11,9 +11,19 @@ private:
         std::unordered_map<std::string, NODE> Children;
     };
 
+    struct JSON_NODE {
+        std::string Name;
+        std::string Type;
+        std::vector<JSON_NODE> Children;
+    };
+
 public:
     explicit
     SOURCE_TREE(PDB_DUMP PdbDump);
+
+
+    nlohmann::json &
+    JsonView();
 
     void
     HtmlView(const std::string &Path);
@@ -26,12 +36,24 @@ private:
     CleanupSourceFiles();
 
     void
-    BuildHierarchy(NODE &Root, const std::vector<std::string> &Paths);
+    BuildJsonHierarchy();
+
+    JSON_NODE
+    ContructJsonNode(
+        const std::string &Path
+    );
+
+    void
+    AddJsonNodeToJsonHierarchy(
+        nlohmann::json &Parent,
+        const JSON_NODE &Node
+    );
 
     PDB_DUMP PdbDump_;
     std::string HtmlPath_;
     std::string TxtPath_;
     std::vector<std::string> SourceFiles_;
+    nlohmann::json JsonHierarchy_;
 
     /*!
      * @brief "Junk" substrings to be erased from each path.

@@ -10,8 +10,8 @@ def compare_text_files(file1, file2, output_file):
             if (len(string) > 3):
                 f3.write(string + '\n')
 
-file1_path = r"C:\\Dev\\NtSourceTree\\Python\\all_strings\\all_strings_26217.txt"
-file2_path = r"C:\\Dev\\NtSourceTree\\Python\\all_strings\\all_strings_26227.txt"
-output_file_path = r"C:\\Dev\\NtSourceTree\\Python\\all_strings\\all_strings_diff_26217_&_26227.txt"
+file1_path = r""    # path1
+file2_path = r""    # path2
+output_file_path = r""  # result
 
 compare_text_files(file1_path, file2_path, output_file_path)

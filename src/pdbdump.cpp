@@ -76,6 +76,7 @@ PDB_DUMP::GetFiles() const
 
                 symbol = Util::DiaSourceFileToString(&sourceFile);
 
+                /* TODO: Find out why this condition was added... I forgot. For now run with it commented out.
                 if (symbol.find("minkernel") != std::string::npos) {
 
                     //
@@ -83,6 +84,8 @@ PDB_DUMP::GetFiles() const
                     //
                     sourceFiles.emplace_back(Util::DiaSourceFileToString(&sourceFile));
                 }
+                */
+                sourceFiles.emplace_back(Util::DiaSourceFileToString(&sourceFile));
 
                 sourceFile->Release();
             }
