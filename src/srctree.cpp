@@ -41,21 +41,21 @@ SOURCE_TREE::HtmlView(
 
 void
 SOURCE_TREE::TxtView(
-    const NODE &Node,
-    std::ofstream &TxtFile,
-    int Indent
+    const nlohmann::json &Node,
+    const std::string &FileName,
+    const std::string &Indent
 )
 {
-    for (const auto &[Name, Child] : Node.Children) {
-		
-        for (int i = 0; i < Indent; ++i) {
-            TxtFile << " ";
+    std::ofstream File(FileName, std::ios_base::trunc);
+    File << Indent << Node["Name"];
+    if (Node["Type"] == "Directory") {
+        File << "\\";
+    }
+    File << "\n";
+    if (Node["Type"] == "Directory") {
+        for (const auto &Child : Node["Children"]) {
+            TxtView(Child, FileName, Indent + "    ");
         }
-
-        TxtFile << Name << "\n";
-        TxtView(Child, 
-				TxtFile, 
-				Indent + 4);
     }
 }
 
@@ -67,13 +67,11 @@ SOURCE_TREE::CleanupSourceFiles()
     }
 
     //
-    // Keep only unique paths and sort.
+    // Keep only unique paths.
     //
     auto unique = std::ranges::unique(SourceFiles_);
     SourceFiles_.erase(unique.begin(), unique.end());
-
-    std::ranges::sort(unique);
-
+    
     std::ranges::for_each(SourceFiles_,
                           [&](std::string &Str) {
                               //
@@ -98,9 +96,9 @@ SOURCE_TREE::CleanupSourceFiles()
                                   }
                               }
 
-							  //
-							  // Fixing file extensions for the known files.
-							  //
+                              //
+                              // Fixing file extensions for the known files.
+                              //
                               for (const auto &[target, replacement] : ExtensionsForReplacement_) {
                                   size_t pos = 0;
                                   while ((pos = Str.find(target, pos)) != std::string::npos) {
@@ -109,62 +107,53 @@ SOURCE_TREE::CleanupSourceFiles()
                                   }
                               }
                           });
+
+    //
+    // ...And sort.
+    //
+    std::ranges::sort(unique);
 }
 
 void
 SOURCE_TREE::BuildJsonHierarchy()
 {
-    for (const std::string &Path : SourceFiles_) {
-        JSON_NODE Node = ContructJsonNode(Path);
-        AddJsonNodeToJsonHierarchy(JsonHierarchy_, Node);
-    }
-}
-
-SOURCE_TREE::JSON_NODE
-SOURCE_TREE::ContructJsonNode(
-    const std::string &Path
-)
-{
-    JSON_NODE JsonNode;
-
-    // Extract the file/directory name
-    size_t Position = Path.find_last_of("/\\");
-    JsonNode.Name = (Position != std::string::npos) ? Path.substr(Position + 1) : Path;
-
-    // Check if it's a directory or a file
-    if (std::filesystem::is_directory(Path)) {
-        JsonNode.Type = "directory";
-
-        // Recursively construct children nodes for directories
-        for (const auto &entry : std::filesystem::directory_iterator(Path)) {
-            if (entry.is_directory()) {
-                JsonNode.Children.push_back(ContructJsonNode(entry.path().string()));
-            }
-        }
-    } else {
-        JsonNode.Type = "file";
+    JsonHierarchy_["Name"] = "root";
+    JsonHierarchy_["Type"] = "Directory";
+    JsonHierarchy_["Children"] = nlohmann::json::array();
+    for (const auto &i : SourceFiles_) {
+        std::filesystem::path Path(i);
+        ContructJsonNode(JsonHierarchy_, Path);
     }
 
-    return JsonNode;
 }
 
 void
-SOURCE_TREE::AddJsonNodeToJsonHierarchy(
-    nlohmann::json &Parent,
-    const JSON_NODE &Node
+SOURCE_TREE::ContructJsonNode(
+    nlohmann::json &Root,
+    const std::filesystem::path &Path
 )
 {
-    nlohmann::json JsonNode;
-    JsonNode["Name"] = Node.Name;
-    JsonNode["Type"] = Node.Type;
-
-    if (Node.Type == "directory") {
-        for (const auto &child : Node.Children) {
-            nlohmann::json childJson;
-            AddJsonNodeToJsonHierarchy(childJson, child);
-            JsonNode["Children"].push_back(childJson);
+    nlohmann::json *Node = &Root;
+    for (auto Iter = Path.begin(); Iter != Path.end(); ++Iter) {
+        bool Found = false;
+        
+        for (auto &Child : (*Node)["Children"]) {
+            if (Child["Name"] == Iter->string()) {
+                Node = &Child;
+                Found = true;
+                break;
+            }
+        }
+        
+        if (!Found) {
+            nlohmann::json NewNode;
+            NewNode["Name"] = Iter->string();
+            NewNode["Type"] = (std::next(Iter) == Path.end() && Iter->has_extension())
+                                  ? "File"
+                                  : "Directory";
+            NewNode["Children"] = nlohmann::json::array();
+            (*Node)["Children"].insert((*Node)["Children"].begin(), NewNode);
+            Node = &(*Node)["Children"].at((*Node)["Children"].size() - 1);
         }
     }
-
-    Parent.push_back(JsonNode);
 }

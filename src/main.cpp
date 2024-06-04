@@ -20,7 +20,7 @@
 #include "srctree.h"
 
 static const std::string DefaultSymbolsLocation = R"(C:\Symbols\ntkrnlmp.pdb\)";
-static const std::string UsageString {
+static const std::string UsageString{
     "\x1b[32m"
     "When launching the NtSourceTree program, provide the path to ntkrnlmp.pdb as "
     "a command line argument:\n\n\tNtSourceTree.exe \"C:\\Symbols\\ntkrnlmp.pdb\\\\"
@@ -31,9 +31,10 @@ int
 wmain(
     int argc,
     wchar_t *argv[]
-    )
+)
 {
     try {
+        // While WIP the path is hardcoded for convenience
         std::wstring filePath = L"C:\\Symbols\\ntkrnlmp.pdb\\B6CDAA3A3EF13C3B2799115B0470342B1\\ntkrnlmp.pdb";
 
         /*
@@ -53,7 +54,7 @@ wmain(
         // Create a PDB dump from the .pdb file path.
         //
         const PDB_DUMP dump(filePath);
-        for (const auto sourceFiles = dump.GetFiles(); 
+        for (const auto sourceFiles = dump.GetFiles();
              const auto &i : sourceFiles) {
             std::cout << i << '\n';
         }
@@ -69,6 +70,11 @@ wmain(
         const nlohmann::json &jsonView = sourceTree.JsonView();
         std::cout << "\n\n\t\tJSON View:\n\n\n";
         std::cout << jsonView.dump(2) << '\n';
+
+        //
+        // Get TXT view and save it in a file.
+        //
+        sourceTree.TxtView(jsonView, "output.txt");
 
         CoUninitialize();
 

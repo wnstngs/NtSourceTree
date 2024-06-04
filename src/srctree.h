@@ -19,17 +19,24 @@ private:
 
 public:
     explicit
-    SOURCE_TREE(PDB_DUMP PdbDump);
-
+    SOURCE_TREE(
+        PDB_DUMP PdbDump
+    );
 
     nlohmann::json &
     JsonView();
 
     void
-    HtmlView(const std::string &Path);
+    HtmlView(
+        const std::string &Path
+    );
 
     void
-    TxtView(const NODE &Node, std::ofstream &TxtFile, int Indent);
+    TxtView(
+        const nlohmann::json &Node,
+        const std::string &FileName,
+        const std::string &Indent = ""
+    );
 
 private:
     void
@@ -38,15 +45,10 @@ private:
     void
     BuildJsonHierarchy();
 
-    JSON_NODE
-    ContructJsonNode(
-        const std::string &Path
-    );
-
     void
-    AddJsonNodeToJsonHierarchy(
-        nlohmann::json &Parent,
-        const JSON_NODE &Node
+    ContructJsonNode(
+        nlohmann::json &Root,
+        const std::filesystem::path &Path
     );
 
     PDB_DUMP PdbDump_;
@@ -102,15 +104,15 @@ private:
         //
         // STORE
         //
-        {"storemgr.c",  "storemgr.cpp"},
+        {"storemgr.c", "storemgr.cpp"},
         //
         // NLS
         //
-        {"localedl.c",  "localedl.cpp"},
+        {"localedl.c", "localedl.cpp"},
         //
         // PS
         //
-        {"psscprv.c",   "psscprv.cpp"}, // Based on: `?PspFinalizeScpCfgPage...`, `?PspFinalizeScpCfgPage...`
+        {"psscprv.c", "psscprv.cpp"}, // Based on: `?PspFinalizeScpCfgPage...`, `?PspFinalizeScpCfgPage...`
 
         //
         // Files known to be ASM:
@@ -119,27 +121,27 @@ private:
         //
         // KE
         //
-        {"apcint.c",    "apcint.asm"},
-        {"callout.c",   "callout.asm"},
+        {"apcint.c", "apcint.asm"},
+        {"callout.c", "callout.asm"},
         {"clocktick.c", "clocktick.asm"},
-        {"ctxswap.c",   "ctxswap.asm"},
-        {"dpcint.c",    "dpcint.asm"},
-        {"idle.c",      "idle.asm"},
-        {"start.c",     "start.asm"},
-        {"sysstubs.c",  "sysstubs.asm"},
-        {"systable.c",  "systable.asm"},
-        {"threadbg.c",  "threadbg.asm"},
-        {"trap.c",      "trap.asm"},
+        {"ctxswap.c", "ctxswap.asm"},
+        {"dpcint.c", "dpcint.asm"},
+        {"idle.c", "idle.asm"},
+        {"start.c", "start.asm"},
+        {"sysstubs.c", "sysstubs.asm"},
+        {"systable.c", "systable.asm"},
+        {"threadbg.c", "threadbg.asm"},
+        {"trap.c", "trap.asm"},
         //
         // RTL
         //
-        {"slist.c",     "slist.asm"},
-        {"chkstk.c",    "chkstk.asm"},
-        {"stkwalk.c",   "stkwalk.asm"},
-        {"movemem.c",   "movemem.asm"},
-        {"xcptmisc.c",  "xcptmisc.asm"},
-        {"capture.c",   "capture.asm"},
-        {"debugstb.c",  "debugstb.asm"},
+        {"slist.c", "slist.asm"},
+        {"chkstk.c", "chkstk.asm"},
+        {"stkwalk.c", "stkwalk.asm"},
+        {"movemem.c", "movemem.asm"},
+        {"xcptmisc.c", "xcptmisc.asm"},
+        {"capture.c", "capture.asm"},
+        {"debugstb.c", "debugstb.asm"},
         //
         // EX
         //
@@ -147,7 +149,7 @@ private:
         //
         // PO
         //
-        {"xsum.c",      "xsum.asm"},
+        {"xsum.c", "xsum.asm"},
         //
         // PS
         //

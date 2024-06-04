@@ -50,7 +50,6 @@ public:
     std::vector<std::string>
     GetTypes();
 
-
 private:
     /*!
      * @brief This function initializes DIA for the provided PDB file.
