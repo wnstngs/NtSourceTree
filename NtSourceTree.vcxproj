@@ -143,12 +143,14 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\basesup.cpp" />
     <ClCompile Include="src\srctree.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\pdbdump.cpp" />
     <ClCompile Include="src\util.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\basesup.h" />
     <ClInclude Include="src\srctree.h" />
     <ClInclude Include="src\thirdparty\json.h" />
     <ClInclude Include="src\pdbdump.h" />
