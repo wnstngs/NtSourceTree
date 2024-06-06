@@ -16,9 +16,9 @@
 #include "basesup.h"
 #include "dia2.h"
 
-class PDB_EXCEPTION : public BUF_EXCEPTION {
+class PDB_EXCEPTION : public Rtl::BUF_EXCEPTION {
 public:
- using BUF_EXCEPTION::BUF_EXCEPTION;
+    using BUF_EXCEPTION::BUF_EXCEPTION;
 };
 
 class PDB_DUMP {

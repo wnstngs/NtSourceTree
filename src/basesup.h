@@ -3,12 +3,21 @@
  * @details Basic support routines for the NtSourceTree project. These may include
  *          common general purpose algorithms and data structures, logging, exception
  *          and assertion infrastructure, and more.
+ *
+ *          RTL, Rtl = Run-Time Library.
  */
 
 #pragma once
 
 #include <exception>
 #include <string>
+
+namespace Rtl {
+
+std::string
+WstringToString(
+    const std::wstring &Wstring
+);
 
 class EXCEPTION_BASE : public std::exception {
 };
@@ -32,3 +41,5 @@ private:
     std::string Message_;
     mutable std::string Buffer_;
 };
+
+}

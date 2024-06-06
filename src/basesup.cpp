@@ -3,6 +3,8 @@
  * @details Basic support routines for the NtSourceTree project. These may include
  *          common general purpose algorithms and data structures, logging, exception
  *          and assertion infrastructure, and more.
+ *
+ *          RTL, Rtl = Run-Time Library.
  */
 
 #include "basesup.h"
@@ -11,7 +13,7 @@
 #include <typeinfo>
 
 std::string
-WstringToString(
+Rtl::WstringToString(
     const std::wstring &Wstring
 )
 {
@@ -38,24 +40,24 @@ WstringToString(
     }
 }
 
-BUF_EXCEPTION::BUF_EXCEPTION()
+Rtl::BUF_EXCEPTION::BUF_EXCEPTION()
 {
 }
 
-BUF_EXCEPTION::BUF_EXCEPTION(
+Rtl::BUF_EXCEPTION::BUF_EXCEPTION(
     std::string Message
 ) : Message_(std::move(Message))
 {
 }
 
-BUF_EXCEPTION::BUF_EXCEPTION(
+Rtl::BUF_EXCEPTION::BUF_EXCEPTION(
     const std::wstring &Message
 ) : Message_(WstringToString(Message))
 {
 }
 
 const char *
-BUF_EXCEPTION::what() const
+Rtl::BUF_EXCEPTION::what() const
 {
     using namespace std::string_literals;
 
