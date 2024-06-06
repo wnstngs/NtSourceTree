@@ -13,7 +13,13 @@
 #include <string>
 #include <vector>
 
+#include "basesup.h"
 #include "dia2.h"
+
+class PDB_EXCEPTION : public BUF_EXCEPTION {
+public:
+ using BUF_EXCEPTION::BUF_EXCEPTION;
+};
 
 class PDB_DUMP {
 public:

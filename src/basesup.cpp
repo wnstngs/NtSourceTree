@@ -10,6 +10,34 @@
 #include <format>
 #include <typeinfo>
 
+std::string
+WstringToString(
+    const std::wstring &Wstring
+)
+{
+    if (Wstring.empty()) {
+        return {};
+    }
+
+    size_t Actual;
+    std::string String;
+    String.resize(Wstring.size() * 2);
+
+    auto Status = wcstombs_s(&Actual,
+                             String.data(),
+                             String.size(),
+                             Wstring.c_str(),
+                             _TRUNCATE);
+    if (Status > 0) {
+        String.resize(Actual - 1);
+
+        return String;
+
+    } else {
+        return {};
+    }
+}
+
 BUF_EXCEPTION::BUF_EXCEPTION()
 {
 }
@@ -22,7 +50,7 @@ BUF_EXCEPTION::BUF_EXCEPTION(
 
 BUF_EXCEPTION::BUF_EXCEPTION(
     const std::wstring &Message
-) : Message_(Common::Util::WstringToString(Message))
+) : Message_(WstringToString(Message))
 {
 }
 

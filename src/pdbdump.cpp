@@ -43,8 +43,10 @@ PDB_DUMP::GetFiles() const
     auto status = DiaGlobalSymbol_->findChildren(SymTagCompiland, nullptr, nsNone, &enumSymbols);
 
     if (FAILED(status)) {
-        throw std::runtime_error(std::format("[PDB_DUMP::GetSourceFiles] DiaGlobalSymbol_->findChildren failed: {0}",
-                                             Util::ErrorMessage(status)));
+        throw PDB_EXCEPTION{
+            std::format("DiaGlobalSymbol_->findChildren failed: {0}",
+                        Util::ErrorMessage(status))
+        };
     }
 
     while (SUCCEEDED(enumSymbols->Next(celt, &compiland, &fetchedCelt)) &&
@@ -119,8 +121,10 @@ PDB_DUMP::GetSymbols()
                                        &enumSymbols);
 
     if (FAILED(status)) {
-        throw std::runtime_error(std::format("[PDB_DUMP::GetSymbols] DiaGlobalSymbol_->findChildren failed: {0}",
-                                             Util::ErrorMessage(status)));
+        throw PDB_EXCEPTION{
+            std::format("DiaGlobalSymbol_->findChildren failed: {0}",
+                        Util::ErrorMessage(status))
+        };
     }
 
     IDiaSymbol *compiland;
@@ -180,8 +184,10 @@ PDB_DUMP::LoadDiaForPdb()
                               reinterpret_cast<void **>(&DiaDataSource_));
 
     if (FAILED(result)) {
-        throw std::runtime_error(std::format("[PDB_DUMP::LoadDiaForPdb] CoCreateInstance failed: {0}",
-                                             Util::ErrorMessage(result)));
+        throw PDB_EXCEPTION{
+            std::format("CoCreateInstance failed: {0}",
+                        Util::ErrorMessage(result))
+        };
     }
 
     //
@@ -191,8 +197,10 @@ PDB_DUMP::LoadDiaForPdb()
     result = DiaDataSource_->loadDataFromPdb(PdbFilePath_.c_str());
 
     if (FAILED(result)) {
-        throw std::runtime_error(std::format("[PDB_DUMP::LoadDiaForPdb] DiaDataSource_->loadDataFromPdb failed: {0}",
-                                             Util::ErrorMessage(result)));
+        throw PDB_EXCEPTION{
+            std::format("DiaDataSource_->loadDataFromPdb failed: {0}",
+                        Util::ErrorMessage(result))
+        };
     }
 
     //
@@ -202,8 +210,10 @@ PDB_DUMP::LoadDiaForPdb()
     result = DiaDataSource_->openSession(&DiaSession_);
 
     if (FAILED(result)) {
-        throw std::runtime_error(std::format("[PDB_DUMP::LoadDiaForPdb] DiaDataSource_->openSession failed: {0}",
-                                             Util::ErrorMessage(result)));
+        throw PDB_EXCEPTION{
+            std::format("DiaDataSource_->openSession failed: {0}",
+                        Util::ErrorMessage(result))
+        };
     }
 
     //
@@ -213,7 +223,9 @@ PDB_DUMP::LoadDiaForPdb()
     result = DiaSession_->get_globalScope(&DiaGlobalSymbol_);
 
     if (result != S_OK) {
-        throw std::runtime_error(std::format("[PDB_DUMP::LoadDiaForPdb] DiaSession_->get_globalScope failed: {0}",
-                                             Util::ErrorMessage(result)));
+        throw PDB_EXCEPTION{
+            std::format("DiaSession_->get_globalScope failed: {0}",
+                        Util::ErrorMessage(result))
+        };
     }
 }
