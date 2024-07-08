@@ -1,11 +1,11 @@
 ﻿/*!
  * @file    pdbdump.cpp
- * @details This module contains the implementation of the PDB_DUMP class, which allows
- *          users to access data from a specific PDB file.
- *          The constructor of the class takes the path to the PDB file as an argument.
- *          Loading data from the PDB file occurs automatically. Public methods of the
- *          class allow to directly retrieve necessary information, such as a list
- *          of all functions or modules.
+ * @details This module contains the implementation of the PDB_DUMP class, which
+ *          allows users to access data from a specific PDB file.
+ *          The constructor of the class takes the path to the PDB file as an
+ *          argument.  Loading data from the PDB file occurs automatically.
+ *          Public methods of the class allow to directly retrieve necessary
+ *          information, such as a list of all functions or modules.
  */
 
 #include "pdbdump.h"
@@ -26,7 +26,8 @@ PDB_DUMP::GetFiles() const
     std::vector<std::string> sourceFiles;
 
     //
-    // In order to find the source files, we have to look at the image's compilands/modules.
+    // In order to find the source files, we have to look at the image's
+    // compilands/modules.
     //
 
     IDiaEnumSymbols *enumSymbols;
@@ -40,7 +41,10 @@ PDB_DUMP::GetFiles() const
     //
     ULONG fetchedCelt = 0;
 
-    auto status = DiaGlobalSymbol_->findChildren(SymTagCompiland, nullptr, nsNone, &enumSymbols);
+    auto status = DiaGlobalSymbol_->findChildren(SymTagCompiland,
+                                                 nullptr,
+                                                 nsNone,
+                                                 &enumSymbols);
 
     if (FAILED(status)) {
         throw PDB_EXCEPTION{
@@ -63,22 +67,24 @@ PDB_DUMP::GetFiles() const
         }
 
         //
-        // Every compiland could contain multiple references to the source files which
-        // were used to build it. Retrieve all source files by compiland by passing NULL
-        // for the name of the source file.
+        // Every compiland could contain multiple references to the source files
+        // which were used to build it. Retrieve all source files by compiland
+        // by passing NULL for the name of the source file.
         //
 
         IDiaEnumSourceFiles *enumSourceFiles;
 
-        if (SUCCEEDED(DiaSession_->findFile(compiland, nullptr, nsNone, &enumSourceFiles))) {
+        if (SUCCEEDED(DiaSession_->findFile(compiland, nullptr, nsNone, &
+                          enumSourceFiles))) {
 
             IDiaSourceFile *sourceFile;
-            while (SUCCEEDED(enumSourceFiles->Next(celt, &sourceFile, &fetchedCelt)) &&
+            while (SUCCEEDED(enumSourceFiles->Next(celt, &sourceFile, &
+                                 fetchedCelt)) &&
                 fetchedCelt == celt) {
 
                 symbol = Util::DiaSourceFileToString(&sourceFile);
 
-                /* TODO: Find out why this condition was added... I forgot. For now run with it commented out.
+                /* TODO: Won't be needed in the future.
                 if (symbol.find("minkernel") != std::string::npos) {
 
                     //
@@ -87,7 +93,8 @@ PDB_DUMP::GetFiles() const
                     sourceFiles.emplace_back(Util::DiaSourceFileToString(&sourceFile));
                 }
                 */
-                sourceFiles.emplace_back(Util::DiaSourceFileToString(&sourceFile));
+                sourceFiles.
+                    emplace_back(Util::DiaSourceFileToString(&sourceFile));
 
                 sourceFile->Release();
             }
@@ -138,11 +145,13 @@ PDB_DUMP::GetSymbols()
 
         IDiaEnumSymbols *enumChildren;
 
-        if (SUCCEEDED(compiland->findChildren(SymTagNull, NULL, nsNone, &enumChildren))) {
+        if (SUCCEEDED(compiland->findChildren(SymTagNull, NULL, nsNone, &
+                          enumChildren))) {
             IDiaSymbol *diaSymbol;
             ULONG celtChildren = 0;
 
-            while (SUCCEEDED(enumChildren->Next(1, &diaSymbol, &celtChildren)) &&
+            while (SUCCEEDED(enumChildren->Next(1, &diaSymbol, &celtChildren))
+                &&
                 (celtChildren == 1)) {
 
                 symbols.emplace_back(Util::DiaSymbolToString(&diaSymbol));

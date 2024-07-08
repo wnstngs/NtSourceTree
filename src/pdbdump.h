@@ -2,10 +2,10 @@
  * @file    pdbdump.h
  * @details This is a header file for the PDB_DUMP class, which allows
  *          users to access data from a specific PDB file.
- *          The constructor of the class takes the path to the PDB file as an argument.
- *          Loading data from the PDB file occurs automatically. Public methods of the
- *          class allow to directly retrieve necessary information, such as a list
- *          of all functions or modules.
+ *          The constructor of the class takes the path to the PDB file as an
+ *          argument.  Loading data from the PDB file occurs automatically.
+ *          Public methods of the class allow to directly retrieve necessary
+ *          information, such as a list of all functions or modules.
  */
 
 #pragma once

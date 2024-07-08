@@ -71,7 +71,8 @@ DiaSourceFileToString(IDiaSourceFile **SourceFile)
     BSTR bstrName{};
 
     if ((*SourceFile)->get_fileName(&bstrName) != S_OK) {
-        throw std::runtime_error("DiaSourceFileToString: (*SourceFile)->get_fileName failed");
+        throw
+            std::runtime_error("DiaSourceFileToString: (*SourceFile)->get_fileName failed");
     }
 
     return BstrToString(bstrName);
@@ -83,7 +84,8 @@ DiaSymbolToString(IDiaSymbol **Compiland)
     BSTR bstrName{};
 
     if ((*Compiland)->get_name(&bstrName) != S_OK) {
-        throw std::runtime_error("DiaSymbolToString: (*Compiland)->get_name failed");
+        throw
+            std::runtime_error("DiaSymbolToString: (*Compiland)->get_name failed");
     }
 
     return BstrToString(bstrName);

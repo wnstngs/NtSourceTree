@@ -13,7 +13,8 @@ std::string
 BstrToString(BSTR Bstr);
 
 /*!
- * @brief This function returns the supplied IDiaSourceFile as a string file name.
+ * @brief This function returns the supplied IDiaSourceFile as a string
+ *        file name.
  * @param SourceFile The IDiaSourceFile to be converted into a string.
  * @return A file name as a string retrieved from the source file.
  */

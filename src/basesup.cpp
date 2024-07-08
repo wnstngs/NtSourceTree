@@ -1,8 +1,8 @@
 ﻿/*!
  * @file    basesup.cpp
- * @details Basic support routines for the NtSourceTree project. These may include
- *          common general purpose algorithms and data structures, logging, exception
- *          and assertion infrastructure, and more.
+ * @details Basic support routines for the NtSourceTree project. These
+ *          may include common general purpose algorithms and data structures,
+ *          logging, exception and assertion infrastructure, and more.
  *
  *          RTL, Rtl = Run-Time Library.
  */
